@@ -1,0 +1,167 @@
+<div class="countdown-timer-section countdown-timer-{{ section.id }}">
+  <div class="container">
+    <div class="countdown-content-wrapper">
+      {% if section.settings.title != blank %}
+        <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      {% if section.settings.subtitle != blank %}
+        {{ section.settings.subtitle }}
+      {% endif %}
+      <div class="count_down_timer">
+        <div id="timer"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>  
+  var countDownDate = new Date("{{ section.settings.end_date }}").getTime();
+  var x = setInterval(function() {
+    var now = new Date().getTime();    
+    var distance = countDownDate - now;
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    days = ('0' + days).slice(-2);
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    hours = ('0' + hours).slice(-2);
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    minutes = ('0' + minutes).slice(-2);
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    seconds = ('0' + seconds).slice(-2);  
+    var content_wrapper = `<div class="time-left"> 
+    <span class="days_left"> ${days}</span>
+    <span class="days_left_text"> Tagen</spna>
+    </div>
+    <div class="time-left"> 
+      <span class="days_left"> ${hours}</span>
+      <span class="days_left_text"> Stunden </spna>
+    </div>
+    <div class="time-left"> 
+      <span class="days_left"> ${minutes}</span>
+      <span class="days_left_text"> Minuten </spna>
+    </div>
+    <div class="time-left"> 
+      <span class="days_left"> ${seconds}</span>
+      <span class="days_left_text"> Sekunden </spna>
+    </div>
+    `
+  
+    document.getElementById("timer").innerHTML = content_wrapper;
+    console.log(distance);
+    if (distance < 0) {
+      clearInterval(x);
+      document.getElementById("timer").innerHTML = "EXPIRED";
+    }
+  }, 1000);
+</script>
+<style>
+  .countdown-timer-{{ section.id }} .container{
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  .countdown-timer-section{
+    background: {{ section.settings.sec_bg }};
+    /* background: linear-gradient(50deg, #f6e402, #f70c0a); */
+  }
+  .count_down_timer {
+    margin-top: 10px;
+  }
+  .countdown-content-wrapper {
+    text-align: center;
+  }
+  .countdown-content-wrapper h2 {
+    font-size: 18px;
+    color: {{ section.settings.sec_text_color }};
+    margin-bottom: 0;
+  }
+  .countdown-content-wrapper p {
+    font-size: 14px;
+    color: {{ section.settings.sec_text_color }};
+    margin: 0;
+  }
+  .count_down_timer #timer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+  }
+  .count_down_timer #timer .time-left {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 0 10px;
+  }
+  .count_down_timer #timer .days_left_text {
+    color: {{ section.settings.sec_cou_color }};
+    font-size: 10px;
+    text-align: center;
+  }
+  .count_down_timer .days_left {
+    display: block;
+    background: #ff931f;
+    width: 2.5em;
+    padding: 0.25em 0.25em;
+    border-radius: 0.15em;
+  }
+</style>
+{% schema %}
+  {
+    "name": "Countdown Timer",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      },
+      {
+        "type": "richtext",
+        "id": "subtitle",
+        "label": "Subtitle"
+      },
+      {
+        "type": "text",
+        "id": "end_date",
+        "label": "End Date",
+        "default": "2024-12-31"
+      },
+      {
+        "type": "color_background",
+        "id": "sec_bg",
+        "label": "Section Background Color"
+      },
+      {
+        "type": "color",
+        "id": "sec_text_color",
+        "label": "Section Text Color"
+      },
+      {
+        "type": "color",
+        "id": "sec_cou_color",
+        "label": "Section Countdown Text Color"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "label": "Padding Top",
+        "default": 0,
+        "min": 0,
+        "max": 60,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "label": "Padding Bottom",
+        "default": 0,
+        "min": 0,
+        "max": 60,
+        "step": 1,
+        "unit": "px"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Countdown Timer"
+      }
+    ]
+  }
+{% endschema %}
